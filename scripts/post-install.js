@@ -5,6 +5,38 @@ import { execSync } from 'node:child_process';
 const coreDir = path.join(process.cwd(), 'node_modules', 'venky-core');
 const distMarker = path.join(coreDir, 'dist', 'venky-exports', 'core', 'ui', 'index.js');
 
+function copyDirRecursive(source, target) {
+  fs.mkdirSync(target, { recursive: true });
+  for (const entry of fs.readdirSync(source, { withFileTypes: true })) {
+    const sourcePath = path.join(source, entry.name);
+    const targetPath = path.join(target, entry.name);
+    if (entry.isDirectory()) {
+      copyDirRecursive(sourcePath, targetPath);
+    } else {
+      fs.copyFileSync(sourcePath, targetPath);
+    }
+  }
+}
+
+function findCachedDistDir() {
+  const pnpmDir = path.join(process.cwd(), 'node_modules', '.pnpm');
+  if (!fs.existsSync(pnpmDir)) {
+    return null;
+  }
+
+  for (const entry of fs.readdirSync(pnpmDir)) {
+    if (!entry.startsWith('venky-core@')) {
+      continue;
+    }
+    const candidate = path.join(pnpmDir, entry, 'node_modules', 'venky-core', 'dist', 'venky-exports', 'core', 'ui', 'index.js');
+    if (fs.existsSync(candidate)) {
+      return path.join(pnpmDir, entry, 'node_modules', 'venky-core', 'dist');
+    }
+  }
+
+  return null;
+}
+
 function ensureCoreBuilt() {
   if (!fs.existsSync(coreDir)) {
     console.warn('⚠ venky-core not installed — skipping build');
@@ -15,9 +47,24 @@ function ensureCoreBuilt() {
     return;
   }
 
+  const cachedDistDir = findCachedDistDir();
+  if (cachedDistDir) {
+    console.info('Restoring venky-core dist from pnpm cache...');
+    copyDirRecursive(cachedDistDir, path.join(coreDir, 'dist'));
+    return;
+  }
+
+  const buildConfig = path.join(coreDir, 'tsconfig.build.json');
+  if (!fs.existsSync(buildConfig)) {
+    throw new Error(
+      'venky-core dist is missing and the GitHub package does not include build files. ' +
+        'Reinstall after publishing a release that includes dist, or run pnpm install again.',
+    );
+  }
+
   console.info('Building venky-core (dist not in package — required for GitHub installs)...');
   const buildEnv = { ...process.env, NODE_ENV: 'development', npm_config_production: 'false' };
-  execSync('npm install --include=dev', { cwd: coreDir, stdio: 'inherit', env: buildEnv });
+  execSync('npm install --include=dev --legacy-peer-deps', { cwd: coreDir, stdio: 'inherit', env: buildEnv });
   execSync('pnpm build', { cwd: coreDir, stdio: 'inherit', env: buildEnv });
 }
 
