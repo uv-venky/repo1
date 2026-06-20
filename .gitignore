@@ -1,0 +1,28 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+
+# env files
+.env*
+!.env.example
+
+# local config overrides
+config/local.yml
+
+# migrations copied from venky-core (regenerated on postinstall)
+/migrations/
+
+.vercel
