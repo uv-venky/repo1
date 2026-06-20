@@ -64,6 +64,10 @@ async function executeMigrations() {
     return;
   }
 
+  if (!process.env.NODE_ENV && process.env.VENKY_IGNORE_MIGRATION_CHECKSUM_MISMATCH) {
+    process.env.NODE_ENV = 'development';
+  }
+
   const client = await getPgClient();
   try {
     await ensureMigrationsTable(client);
