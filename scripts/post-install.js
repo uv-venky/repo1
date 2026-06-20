@@ -2,68 +2,26 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { execSync } from 'node:child_process';
 
-const siblingCoreDir = path.resolve(process.cwd(), '../venky-core');
-const installedCoreDir = path.join(process.cwd(), 'node_modules', 'venky-core');
-
-function resolveCoreDir() {
-  if (!fs.existsSync(installedCoreDir)) {
-    return null;
-  }
-  try {
-    if (fs.existsSync(path.join(siblingCoreDir, 'package.json'))) {
-      const installedReal = fs.realpathSync(installedCoreDir);
-      const siblingReal = fs.realpathSync(siblingCoreDir);
-      if (installedReal === siblingReal) {
-        return siblingCoreDir;
-      }
-    }
-  } catch {
-    // fall through
-  }
-  return installedCoreDir;
-}
-
-function distMarker(coreDir) {
-  return path.join(coreDir, 'dist', 'venky-exports', 'core', 'ui', 'index.js');
-}
-
-function copyDist(fromCore, toCore) {
-  const fromDist = path.join(fromCore, 'dist');
-  const toDist = path.join(toCore, 'dist');
-  fs.rmSync(toDist, { recursive: true, force: true });
-  fs.cpSync(fromDist, toDist, { recursive: true });
-}
+const coreDir = path.join(process.cwd(), 'node_modules', 'venky-core');
+const distMarker = path.join(coreDir, 'dist', 'venky-exports', 'core', 'ui', 'index.js');
 
 function ensureCoreBuilt() {
-  const coreDir = resolveCoreDir();
-  if (!coreDir) {
+  if (!fs.existsSync(coreDir)) {
     console.warn('⚠ venky-core not installed — skipping build');
     return;
   }
 
-  if (fs.existsSync(distMarker(coreDir))) {
+  if (fs.existsSync(distMarker)) {
     return;
   }
 
-  const siblingHasDevDeps = fs.existsSync(path.join(siblingCoreDir, 'node_modules', 'rimraf'));
-
-  if (siblingHasDevDeps) {
-    console.info('Building venky-core from sibling checkout...');
-    execSync('pnpm build', { cwd: siblingCoreDir, stdio: 'inherit' });
-    if (coreDir !== siblingCoreDir && fs.existsSync(distMarker(siblingCoreDir))) {
-      copyDist(siblingCoreDir, coreDir);
-    }
-    return;
-  }
-
-  console.info('Building venky-core in node_modules (GitHub install — installing dev deps first)...');
+  console.info('Building venky-core (dist not in package — required for GitHub installs)...');
   const buildEnv = { ...process.env, NODE_ENV: 'development', npm_config_production: 'false' };
   execSync('npm install --include=dev', { cwd: coreDir, stdio: 'inherit', env: buildEnv });
   execSync('pnpm build', { cwd: coreDir, stdio: 'inherit', env: buildEnv });
 }
 
 async function copyMigrationsFromCore() {
-  const coreDir = resolveCoreDir() ?? installedCoreDir;
   const targetDir = path.join(process.cwd(), 'migrations');
   const coreMigrationsDir = path.join(coreDir, 'migrations');
 

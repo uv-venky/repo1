@@ -23,27 +23,8 @@ pnpm dev
 
 `postinstall` will:
 
-1. Run `pnpm build` inside `node_modules/venky-core` if `dist/` is missing (GitHub installs do not include built output)
+1. Install dev dependencies and run `pnpm build` inside `node_modules/venky-core` if `dist/` is missing
 2. Copy SQL migrations from venky-core into `./migrations`
-
-## Local venky-core development (optional)
-
-To work on the library and app side-by-side, replace the dependency in `package.json`:
-
-```json
-"venky-core": "link:../venky-core"
-```
-
-Then build the sibling checkout:
-
-```bash
-cd ../venky-core
-pnpm install
-pnpm build
-cd ../repo1
-pnpm install
-pnpm dev
-```
 
 ## Environment variables
 
