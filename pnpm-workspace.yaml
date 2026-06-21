@@ -3,3 +3,4 @@ allowBuilds:
   sharp: true
   venky-core: true
   venky-core@https://codeload.github.com/uv-venky/venky-core/tar.gz/2866fe5b0f3dca8c3e9986420b5d02c2a69f97f2: true
+  venky-core@https://codeload.github.com/uv-venky/venky-core/tar.gz/c21a56fe1f05bb6e116ae68dd88383c589d56f9e: true
