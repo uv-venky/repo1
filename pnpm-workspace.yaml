@@ -2,4 +2,4 @@ allowBuilds:
   esbuild: true
   sharp: true
   venky-core: true
-  venky-core@https://codeload.github.com/uv-venky/venky-core/tar.gz/3f515c54300e6cf5123b791abe2381e429d2deb9: true
+  venky-core@https://codeload.github.com/uv-venky/venky-core/tar.gz/2866fe5b0f3dca8c3e9986420b5d02c2a69f97f2: true

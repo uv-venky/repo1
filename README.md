@@ -2,7 +2,7 @@
 
 Reference **consumer application** for [venky-core](https://github.com/uv-venky/venky-core).
 
-**Pinned release:** [v0.4.3](https://github.com/uv-venky/venky-core/releases/tag/v0.4.3)
+**Pinned release:** [v0.4.4](https://github.com/uv-venky/venky-core/releases/tag/v0.4.4)
 
 ## Documentation
 

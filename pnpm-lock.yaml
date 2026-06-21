@@ -69,8 +69,8 @@ importers:
         specifier: 2.3.2
         version: 2.3.2(@types/react@19.2.15)(react@19.2.6)
       venky-core:
-        specifier: github:uv-venky/venky-core#v0.4.3
-        version: https://codeload.github.com/uv-venky/venky-core/tar.gz/3f515c54300e6cf5123b791abe2381e429d2deb9(5b734927e1e64397e2eb4d1e49a2a627)
+        specifier: github:uv-venky/venky-core#v0.4.4
+        version: https://codeload.github.com/uv-venky/venky-core/tar.gz/2866fe5b0f3dca8c3e9986420b5d02c2a69f97f2(5b734927e1e64397e2eb4d1e49a2a627)
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -4461,8 +4461,8 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
       react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
 
-  venky-core@https://codeload.github.com/uv-venky/venky-core/tar.gz/3f515c54300e6cf5123b791abe2381e429d2deb9:
-    resolution: {gitHosted: true, integrity: sha512-mtnxyIUvi0k3LEKWfe3dc0opf9tnNXGMncQfC6AUgA9L0kadnRGNXdLTt/IwJ6LNuQtHk19xoMGDpUijlJklcg==, tarball: https://codeload.github.com/uv-venky/venky-core/tar.gz/3f515c54300e6cf5123b791abe2381e429d2deb9}
+  venky-core@https://codeload.github.com/uv-venky/venky-core/tar.gz/2866fe5b0f3dca8c3e9986420b5d02c2a69f97f2:
+    resolution: {gitHosted: true, integrity: sha512-czMXKMvsVVycf53Y6y6P+rj8Tr0CEElTr2LW+bXkxdntvdMV3zdwewYgXxwr5TDztjTA/rtpf0eMb7+gbBZQVQ==, tarball: https://codeload.github.com/uv-venky/venky-core/tar.gz/2866fe5b0f3dca8c3e9986420b5d02c2a69f97f2}
     version: 1.0.0
     engines: {node: '>=24.13.0'}
     hasBin: true
@@ -9363,7 +9363,7 @@ snapshots:
       - '@types/react'
       - '@types/react-dom'
 
-  venky-core@https://codeload.github.com/uv-venky/venky-core/tar.gz/3f515c54300e6cf5123b791abe2381e429d2deb9(5b734927e1e64397e2eb4d1e49a2a627):
+  venky-core@https://codeload.github.com/uv-venky/venky-core/tar.gz/2866fe5b0f3dca8c3e9986420b5d02c2a69f97f2(5b734927e1e64397e2eb4d1e49a2a627):
     dependencies:
       '@aws-sdk/s3-presigned-post': 3.1054.0
       '@dnd-kit/core': 6.3.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)

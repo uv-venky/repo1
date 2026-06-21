@@ -16,6 +16,15 @@ import { ensureMigrationsTable, runMigrations } from 'venky-core/cli';
 async function getPgClient() {
   dotenv.config();
   dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+
+  // Local migrate runs should honor checksum-ignore from .env (requires NODE_ENV=development).
+  if (
+    process.env.VENKY_IGNORE_MIGRATION_CHECKSUM_MISMATCH === 'true' ||
+    process.env.VENKY_IGNORE_MIGRATION_CHECKSUM_MISMATCH === '1'
+  ) {
+    process.env.NODE_ENV = 'development';
+  }
+
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
     throw new Error('DATABASE_URL environment variable is not set.');
@@ -62,10 +71,6 @@ async function executeMigrations() {
   if (process.env.SKIP_MIGRATIONS === 'true') {
     console.warn('⚠ Skipping migrations (SKIP_MIGRATIONS=true)');
     return;
-  }
-
-  if (!process.env.NODE_ENV && process.env.VENKY_IGNORE_MIGRATION_CHECKSUM_MISMATCH) {
-    process.env.NODE_ENV = 'development';
   }
 
   const client = await getPgClient();

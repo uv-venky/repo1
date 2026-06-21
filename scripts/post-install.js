@@ -28,7 +28,17 @@ function findCachedDistDir() {
     if (!entry.startsWith('venky-core@')) {
       continue;
     }
-    const candidate = path.join(pnpmDir, entry, 'node_modules', 'venky-core', 'dist', 'venky-exports', 'core', 'ui', 'index.js');
+    const candidate = path.join(
+      pnpmDir,
+      entry,
+      'node_modules',
+      'venky-core',
+      'dist',
+      'venky-exports',
+      'core',
+      'ui',
+      'index.js',
+    );
     if (fs.existsSync(candidate)) {
       return path.join(pnpmDir, entry, 'node_modules', 'venky-core', 'dist');
     }
@@ -55,17 +65,20 @@ function ensureCoreBuilt() {
   }
 
   const buildConfig = path.join(coreDir, 'tsconfig.build.json');
-  if (!fs.existsSync(buildConfig)) {
-    throw new Error(
-      'venky-core dist is missing and the GitHub package does not include build files. ' +
-        'Reinstall after publishing a release that includes dist, or run pnpm install again.',
-    );
+  if (fs.existsSync(buildConfig)) {
+    console.info('Building venky-core (dist not bundled — first install may take a few minutes)...');
+    const buildEnv = { ...process.env, NODE_ENV: 'development', npm_config_production: 'false' };
+    execSync('npm install --include=dev --legacy-peer-deps', { cwd: coreDir, stdio: 'inherit', env: buildEnv });
+    execSync('pnpm build', { cwd: coreDir, stdio: 'inherit', env: buildEnv });
+    if (fs.existsSync(distMarker)) {
+      return;
+    }
   }
 
-  console.info('Building venky-core (dist not in package — required for GitHub installs)...');
-  const buildEnv = { ...process.env, NODE_ENV: 'development', npm_config_production: 'false' };
-  execSync('npm install --include=dev --legacy-peer-deps', { cwd: coreDir, stdio: 'inherit', env: buildEnv });
-  execSync('pnpm build', { cwd: coreDir, stdio: 'inherit', env: buildEnv });
+  throw new Error(
+    'venky-core dist is missing. Upgrade to venky-core v0.4.4+ (includes pre-built dist), ' +
+      'or avoid `pnpm clean` / full node_modules deletes that wipe the pnpm dist cache.',
+  );
 }
 
 async function copyMigrationsFromCore() {
